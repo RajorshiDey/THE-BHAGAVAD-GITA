@@ -1,14 +1,14 @@
 import os
 from langchain_chroma import Chroma
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.embeddings import FastEmbedEmbeddings  # <-- CHANGED: Replaced HuggingFaceEmbeddings
 from langchain_core.documents import Document
 from app.services.data_loader import gita_repo
 from app.core.config import settings
 
 class RAGService:
     def __init__(self):
-        # Using the local embedding model specified in config
-        self.embeddings = HuggingFaceEmbeddings(model_name=settings.EMBEDDING_MODEL_NAME)
+        # Uses FastEmbed (ONNX Runtime) instead of PyTorch (~120 MB RAM)
+        self.embeddings = FastEmbedEmbeddings(model_name=settings.EMBEDDING_MODEL_NAME)  # <-- CHANGED
         self.persist_directory = os.path.join(os.path.dirname(__file__), "../../data/chroma_db")
         self.collection_name = "bhagavad_gita"
         self.vector_store = self._initialize_vector_store()

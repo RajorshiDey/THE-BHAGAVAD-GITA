@@ -1,6 +1,4 @@
---extra-index-url https://download.pytorch.org/whl/cpu
-torch
-sentence-transformers
+fastembed
 chromadb
 langchain-chroma
 langchain-groq
@@ -9,3 +7,4 @@ uvicorn
 python-dotenv
 pydantic
 langchain-huggingface
+langchain-community
