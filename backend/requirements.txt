@@ -1,12 +1,10 @@
-fastapi
-uvicorn
-pydantic
-pydantic-settings
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch
 sentence-transformers
 chromadb
-langchain
-langchain-community
-langchain-groq
 langchain-chroma
+langchain-groq
+fastapi
+uvicorn
 python-dotenv
-langchain-huggingface
+pydantic
