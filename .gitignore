@@ -12,10 +12,6 @@ __pycache__/
 *.pyc
 .pytest_cache/
 
-# Chroma Vector Store (rebuilt automatically on server startup)
-backend/data/chroma_db/
-data/chroma_db/
-
 # System Files
 .DS_Store
 Thumbs.db

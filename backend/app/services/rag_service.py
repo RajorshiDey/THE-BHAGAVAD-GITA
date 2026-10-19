@@ -1,52 +1,30 @@
 import os
 from langchain_chroma import Chroma
-from langchain_community.embeddings import FastEmbedEmbeddings  # <-- CHANGED: Replaced HuggingFaceEmbeddings
-from langchain_core.documents import Document
-from app.services.data_loader import gita_repo
+from langchain_community.embeddings import FastEmbedEmbeddings
 from app.core.config import settings
 
 class RAGService:
     def __init__(self):
-        # Uses FastEmbed (ONNX Runtime) instead of PyTorch (~120 MB RAM)
-        self.embeddings = FastEmbedEmbeddings(model_name=settings.EMBEDDING_MODEL_NAME)  # <-- CHANGED
         self.persist_directory = os.path.join(os.path.dirname(__file__), "../../data/chroma_db")
         self.collection_name = "bhagavad_gita"
-        self.vector_store = self._initialize_vector_store()
+        self._embeddings = None
+        self._vector_store = None
 
-    def _initialize_vector_store(self) -> Chroma:
-        # Load existing vector store if it has already been built
-        if os.path.exists(self.persist_directory):
-            return Chroma(
+    @property
+    def vector_store(self) -> Chroma:
+        """Lazy-loads the vector store only when requested to keep server boot memory under 50 MB."""
+        if self._vector_store is None:
+            self._embeddings = FastEmbedEmbeddings(model_name=settings.EMBEDDING_MODEL_NAME)
+            self._vector_store = Chroma(
                 collection_name=self.collection_name,
-                embedding_function=self.embeddings,
+                embedding_function=self._embeddings,
                 persist_directory=self.persist_directory
             )
-        
-        # Otherwise, generate embeddings from the JSON data
-        documents = []
-        for verse_id, verse in gita_repo.verses.items():
-            page_content = f"Chapter {verse.chapter}, Verse {verse.verse}\n"
-            page_content += f"Translation: {verse.translation}\n"
-            if verse.explanation:
-                page_content += f"Explanation: {verse.explanation}\n"
-            
-            metadata = {
-                "verse_id": verse_id,
-                "chapter": verse.chapter,
-                "verse": verse.verse
-            }
-            documents.append(Document(page_content=page_content, metadata=metadata))
-            
-        return Chroma.from_documents(
-            documents=documents,
-            embedding=self.embeddings,
-            collection_name=self.collection_name,
-            persist_directory=self.persist_directory
-        )
+        return self._vector_store
 
     def retrieve_context(self, query: str, k: int = 3):
-        """Retrieves the top k most relevant verses for a given query."""
+        """Retrieves top k relevant verses using lazy-loaded vector store."""
         return self.vector_store.similarity_search(query=query, k=k)
 
-# Global Instance
+# Global Instance (boots instantly without loading heavy models into RAM)
 rag_service = RAGService()
