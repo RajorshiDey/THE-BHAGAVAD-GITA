@@ -4,6 +4,7 @@ from app.core.config import settings
 from app.api.v1 import chapters, verses, search
 from app.services.data_loader import gita_repo
 from app.api.v1 import ai
+import os
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -36,4 +37,6 @@ app.include_router(ai.router, prefix=f"{settings.API_V1_STR}/ai", tags=["AI"])
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
+
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run("app.main:app", host="0.0.0.0", port=port, reload=False)
