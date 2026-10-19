@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Bhagavad Gita - AI Learning Platform</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Dark background backdrop for mobiledrawers -->
+    <div id="backdrop" class="backdrop hidden"></div>
+
+    <header class="top-nav">
+        <button id="mobile-menu-toggle" class="nav-btn mobile-only">☰ Chapters</button>
+        <h1>The Bhagavad Gita</h1>
+        <!-- <div class="controls">
+            <select id="language-select">
+                <option value="en">English</option>
+                <option value="hi">Hindi</option>
+            </select>
+        </div> -->
+    </header>
+
+    <div class="app-container">
+        <!-- Left Sidebar: Chapters (Slide-out drawer on mobile) -->
+        <aside class="sidebar" id="chapter-sidebar">
+            <div class="sidebar-header">
+                <h2>Chapters</h2>
+                <button id="close-sidebar-btn" class="icon-btn mobile-only">&times;</button>
+            </div>
+            <div id="chapter-list" class="scrollable-list">
+                <p class="loading">Loading chapters...</p>
+            </div>
+        </aside>
+
+        <!-- Main Column: Verse Reader -->
+        <main class="reader-pane">
+            <div class="verse-controls">
+                <button id="prev-verse" disabled>&larr; Prev</button>
+                <select id="verse-select" disabled>
+                    <option>Select a Chapter First</option>
+                </select>
+                <button id="next-verse" disabled>Next &rarr;</button>
+            </div>
+
+            <div id="verse-content" class="verse-content hidden">
+                <div class="verse-header">
+                    <span class="verse-number" id="verse-id-display"></span>
+                </div>
+                <div class="sanskrit-text" id="sanskrit-text"></div>
+                <div class="transliteration-text" id="transliteration-text"></div>
+                
+                <div class="tabs">
+                    <button class="tab-btn active" data-target="translation-panel">Translation</button>
+                    <button class="tab-btn" data-target="explanation-panel">Explanation</button>
+                    <button class="tab-btn" data-target="word-meanings-panel">Word Meanings</button>
+                </div>
+
+                <div id="translation-panel" class="tab-panel active"></div>
+                <div id="explanation-panel" class="tab-panel hidden"></div>
+                <div id="word-meanings-panel" class="tab-panel hidden"></div>
+            </div>
+
+            <div id="reader-empty-state" class="empty-state">
+                Select a chapter and verse to begin reading.
+            </div>
+        </main>
+
+        <!-- Right Panel: AI Guide (Bottom sheet modal on mobile) -->
+        <aside class="ai-panel" id="ai-panel">
+            <div class="ai-header">
+                <h2>AI Guide</h2>
+                <button id="close-ai-btn" class="icon-btn mobile-only">&times;</button>
+            </div>
+            
+            <div id="chat-history" class="chat-history scrollable-list">
+                <div class="chat-message ai-message">
+                    Hare Krishna! I am your AI guide to the Gita. You can ask me general questions, or ask about a specific verse.
+                </div>
+            </div>
+
+            <div class="chat-composer">
+                <div id="pinned-verse-chip" class="pinned-verse-chip hidden">
+                    <span>Asking about Verse <strong id="pinned-verse-label"></strong></span>
+                    <button id="clear-pin-btn" class="clear-btn">&times;</button>
+                </div>
+                <textarea id="ai-input" placeholder="Ask the Gita anything..."></textarea>
+                <button id="ask-btn">Ask</button>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Floating Action Button for Mobile AI Guide -->
+    <button id="mobile-ai-fab" class="fab-btn mobile-only">Ask AI</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

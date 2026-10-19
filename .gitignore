@@ -1,0 +1,21 @@
+# Secret Keys & Environment Variables
+.env
+
+# Virtual Environment
+venv/
+.venv/
+env/
+bagvad/
+
+# Python Caches & Compiled Files
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Chroma Vector Store (rebuilt automatically on server startup)
+backend/data/chroma_db/
+data/chroma_db/
+
+# System Files
+.DS_Store
+Thumbs.db
